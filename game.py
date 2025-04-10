@@ -13,6 +13,8 @@ BULLET_SPEED = 7
 ENEMY_ROWS = 5
 ENEMY_COLS = 8
 ENEMY_SPACING = 60
+ENEMY_SHOOT_CHANCE = 0.02  # 2% chance per enemy per frame to shoot
+PLAYER_MAX_HEALTH = 3
 
 # Colors
 BLACK = (0, 0, 0)
@@ -38,6 +40,7 @@ class Player:
         self.speed = PLAYER_SPEED
         self.bullets = []
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        self.health = PLAYER_MAX_HEALTH
 
     def move(self, direction):
         if direction == "left" and self.x > 0:
@@ -59,6 +62,9 @@ class Player:
         pygame.draw.rect(screen, GREEN, (self.x, self.y, self.width, self.height))
         for bullet in self.bullets:
             pygame.draw.rect(screen, WHITE, (bullet[0], bullet[1], 4, 10))
+        # Draw health bar
+        for i in range(self.health):
+            pygame.draw.rect(screen, GREEN, (10 + i * 20, 10, 15, 15))
 
 class Enemy:
     def __init__(self, x, y):
@@ -78,6 +84,11 @@ class Enemy:
 
     def draw(self):
         pygame.draw.rect(screen, RED, (self.x, self.y, self.width, self.height))
+
+    def try_shoot(self):
+        if random.random() < ENEMY_SHOOT_CHANCE:
+            return [self.x + self.width // 2 - 2, self.y + self.height]
+        return None
 
 def create_enemies():
     enemies = []
@@ -120,6 +131,7 @@ def main():
         player = Player()
         enemies = create_enemies()
         enemy_direction = "right"
+        enemy_bullets = []  # List to store enemy bullets
         game_over = False
         win = False
 
@@ -140,6 +152,26 @@ def main():
 
             # Update bullets
             player.update_bullets()
+
+            # Update enemy bullets
+            for bullet in enemy_bullets[:]:
+                bullet[1] += BULLET_SPEED
+                if bullet[1] > HEIGHT:
+                    enemy_bullets.remove(bullet)
+                # Check collision with player
+                elif (bullet[0] >= player.x and bullet[0] <= player.x + player.width and
+                      bullet[1] >= player.y and bullet[1] <= player.y + player.height):
+                    enemy_bullets.remove(bullet)
+                    player.health -= 1
+                    if player.health <= 0:
+                        game_over = True
+                        win = False
+
+            # Enemy shooting
+            for enemy in enemies:
+                bullet = enemy.try_shoot()
+                if bullet:
+                    enemy_bullets.append(bullet)
 
             # Move enemies
             move_down = False
@@ -184,6 +216,9 @@ def main():
             player.draw()
             for enemy in enemies:
                 enemy.draw()
+            # Draw enemy bullets
+            for bullet in enemy_bullets:
+                pygame.draw.rect(screen, RED, (bullet[0], bullet[1], 4, 10))
 
             pygame.display.flip()
             clock.tick(60)

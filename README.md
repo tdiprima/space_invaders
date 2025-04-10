@@ -32,14 +32,21 @@ python game.py
 ## Game Rules
 
 - Control the green player ship at the bottom of the screen
+- You have 3 health points (shown as green squares in the top-left corner)
 - Shoot the red enemy ships before they reach the bottom
-- The game ends if any enemy ship reaches the bottom of the screen
-- Destroy all enemy ships to win!
+- Avoid enemy bullets - getting hit reduces your health
+- The game ends if:
+  - You lose all 3 health points
+  - Any enemy ship reaches the bottom of the screen
+  - You destroy all enemy ships (Victory!)
 
 ## Features
 
 - Simple and clean graphics
 - Smooth controls
+- Player health system
+- Enemy shooting mechanics
 - Collision detection
 - Enemy movement patterns
 - Bullet mechanics
+- Visual health indicator
