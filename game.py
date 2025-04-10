@@ -13,7 +13,7 @@ BULLET_SPEED = 7
 ENEMY_ROWS = 5
 ENEMY_COLS = 8
 ENEMY_SPACING = 60
-ENEMY_SHOOT_CHANCE = 0.02  # 2% chance per enemy per frame to shoot
+ENEMY_SHOOT_CHANCE = 0.001  # Reduced from 2% chance per enemy per frame
 PLAYER_MAX_HEALTH = 3
 
 # Colors
