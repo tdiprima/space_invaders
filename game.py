@@ -86,7 +86,7 @@ class Enemy:
         pygame.draw.rect(screen, RED, (self.x, self.y, self.width, self.height))
 
     def try_shoot(self):
-        if random.random() < ENEMY_SHOOT_CHANCE:
+        if random.random() < ENEMY_SHOOT_CHANCE:  # nosec B311
             return [self.x + self.width // 2 - 2, self.y + self.height]
         return None
 
